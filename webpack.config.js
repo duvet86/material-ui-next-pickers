@@ -1,33 +1,41 @@
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
-  devtool: 'eval',
-  entry: process.env.NODE_ENV === 'development'? [
-    'webpack-dev-server/client?',
-    './demo'
-  ]:['./demo'],
-  mode: 'development',
+  mode: "development",
+  entry: "./demo/index.tsx",
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].bundle.js',
-    chunkFilename: '[name].chunk.js',
-		publicPath: '/'
+    path: path.join(__dirname, "dist"),
+    filename: "[name].bundle.js",
+    chunkFilename: "[name].chunk.js",
+    publicPath: "/"
   },
   resolve: {
-    extensions: ['.js', '.ts', '.tsx']
+    extensions: [".js", ".ts", ".tsx"],
+    plugins: [new TsconfigPathsPlugin()]
   },
   module: {
-    rules: [{
-      test: /\.tsx?$/,
-      loader: 'ts-loader'
-    }]
+    rules: [
+      {
+        test: /\.tsx?$/,
+        loader: "ts-loader"
+      }
+    ]
   },
   plugins: [
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html'
-    })
-  ]
-}
+      filename: "index.html",
+      template: "index.html"
+    }),
+    new webpack.HotModuleReplacementPlugin()
+  ],
+  devServer: {
+    contentBase: "./dist",
+    hot: true,
+    open: true,
+    overlay: true,
+    historyApiFallback: true
+  }
+};

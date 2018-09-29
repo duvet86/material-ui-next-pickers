@@ -1,64 +1,103 @@
-import * as React from 'react'
-import * as ReactDOM from 'react-dom'
-import {MuiThemeProvider, createMuiTheme, withStyles, StyledComponentProps, Theme} from '@material-ui/core/styles'
+import React from "react";
+import { render } from "react-dom";
+import {
+  MuiThemeProvider,
+  createMuiTheme,
+  createStyles,
+  withStyles,
+  WithStyles
+} from "@material-ui/core/styles";
 
-const theme = createMuiTheme()
+// import DateFormatInput from "../src/datepicker";
+// import TimeFormatInput from "../src/timepicker";
 
-import DateFormatInput from '../src/datepicker'
-import TimeFormatInput from '../src/timepicker'
+import Calendar from "../src/calendar/Calendar";
 
-const styles = (theme:Theme):Record<string, React.CSSProperties> => ({
+const theme = createMuiTheme();
+
+const styles = createStyles({
   container: {
-    width: '100vw',
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    width: "100vw",
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
   }
-})
-@(withStyles as any)(styles)
-class DemoPage extends React.Component<DemoPageProps, DemoPageState> {
-  constructor(props) {
-    super(props)
-    const now = new Date()
+});
+
+interface IState {
+  date: Date;
+  min: Date;
+  max: Date;
+  time?: Date;
+}
+
+class DemoPage extends React.Component<WithStyles<typeof styles>, IState> {
+  constructor(props: WithStyles<typeof styles>) {
+    super(props);
+    const now = new Date();
     this.state = {
-      date: undefined,
-      min: new Date(now.getTime() - (180 * 86400000)),
-      max: new Date(now.getTime() + (120 * 86400000)),
+      date: now,
+      min: new Date(now.getTime() - 180 * 86400000),
+      max: new Date(now.getTime() + 120 * 86400000),
       time: undefined
-    }
+    };
   }
-  onChangeDate = (date:Date) => {
-    console.log('Date = ' + date)
-    this.setState({date})
-  }
-  onChangeTime = (time:Date) => {
-    console.log('Time = ' + time)
-    this.setState({time})
-  } 
-  render() {
-    const {classes} = this.props
-    const {date, min, max, time} = this.state
+
+  public render() {
+    const { classes } = this.props;
+    const { date, min, max, time } = this.state;
     return (
       <div className={classes.container}>
-        <DateFormatInput name='date-input' value={date} onChange={this.onChangeDate} min={min} max={max} label='Date' okToConfirm/>
-        <TimeFormatInput name='time-input' value={time} onChange={this.onChangeTime} label='Time' selectableMinutesInterval={5} dialog okToConfirm/>
+        <div>
+          <Calendar
+            value={date}
+            onChange={this.onChangeDate}
+            closeCalendar={this.closeCalendar}
+          />
+          {/* <DateFormatInput
+          name="date-input"
+          value={date}
+          onChange={this.onChangeDate}
+          min={min}
+          max={max}
+          label="Date"
+          okToConfirm
+        />
+        <TimeFormatInput
+          name="time-input"
+          value={time}
+          onChange={this.onChangeTime}
+          label="Time"
+          selectableMinutesInterval={5}
+          dialog
+          okToConfirm
+        /> */}
+        </div>
       </div>
-    )
+    );
   }
-}
-interface DemoPageProps extends React.Props<{}>, StyledComponentProps {
-}
-interface DemoPageState {
-  date: Date
-  min: Date
-  max: Date
-  time: Date
+
+  private onChangeDate = (date: Date) => {
+    this.setState({ date });
+  };
+
+  private onChangeTime = (time: Date) => {
+    this.setState({ time });
+  };
+
+  private closeCalendar = () => {
+    // tslint:disable-next-line:no-console
+    console.log("close");
+  };
 }
 
-ReactDOM.render(
+const DemoStyledPage = withStyles(styles)(DemoPage);
+
+render(
   <MuiThemeProvider theme={theme}>
-    <DemoPage/>
-  </MuiThemeProvider>
-, document.getElementById('root'))
+    <DemoStyledPage />
+  </MuiThemeProvider>,
+  document.getElementById("root")
+);
