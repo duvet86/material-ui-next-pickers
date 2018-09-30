@@ -8,6 +8,7 @@ import {
 import Typography from "@material-ui/core/Typography";
 
 import Day from "calendar/Day";
+import SlideTransition from "calendar/SlideTransition";
 
 import { days, generateMonthCalendar } from "date";
 
@@ -17,6 +18,7 @@ export interface IProps extends WithStyles<typeof styles> {
   selectDate: (date: Date, event: React.MouseEvent<HTMLElement>) => void;
   showYearsCalendar: () => void;
   tabIndex: number;
+  slideDirection: "left" | "right";
 }
 
 const styles = (theme: Theme) =>
@@ -32,6 +34,9 @@ const styles = (theme: Theme) =>
       color: theme.palette.text.hint,
       lineHeight: "48px",
       textAlign: "center"
+    },
+    transitionContainer: {
+      minHeight: 36 * 6
     }
   });
 
@@ -40,7 +45,8 @@ const CalendarDays: React.SFC<IProps> = ({
   active,
   dateDisabled,
   selectDate,
-  tabIndex
+  tabIndex,
+  slideDirection
 }) => (
   <>
     <div className={classes.week}>
@@ -54,19 +60,28 @@ const CalendarDays: React.SFC<IProps> = ({
         </Typography>
       ))}
     </div>
-    {generateMonthCalendar(tabIndex).map((week, index) => (
-      <div className={classes.week} key={"week-" + index}>
-        {week.map((date, weekIndex) => (
-          <Day
-            key={"day-" + weekIndex}
-            active={active}
-            dateDisabled={dateDisabled}
-            selectDate={selectDate}
-            date={date}
-          />
+
+    <SlideTransition
+      slideDirection={slideDirection}
+      transKey={tabIndex.toString()}
+      className={classes.transitionContainer}
+    >
+      <div>
+        {generateMonthCalendar(tabIndex).map((week, index) => (
+          <div className={classes.week} key={"week-" + index}>
+            {week.map((date, weekIndex) => (
+              <Day
+                key={"day-" + weekIndex}
+                active={active}
+                dateDisabled={dateDisabled}
+                selectDate={selectDate}
+                date={date}
+              />
+            ))}
+          </div>
         ))}
       </div>
-    ))}
+    </SlideTransition>
   </>
 );
 

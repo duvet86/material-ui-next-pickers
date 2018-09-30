@@ -1,8 +1,8 @@
 import React from "react";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 
 import Calendar from "calendar/Calendar";
+import DialogHeader from "calendar/DialogHeader";
 
 export interface IProps {
   value: Date;
@@ -63,7 +63,7 @@ class CalendarContainer extends React.Component<IProps, IState> {
 
     return (
       <Dialog fullScreen={this.isMobile} open={true}>
-        <DialogTitle>Set backup account</DialogTitle>
+        <DialogHeader />
         <Calendar
           isMobile={this.isMobile}
           mode={mode}

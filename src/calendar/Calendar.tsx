@@ -47,10 +47,13 @@ const styles = (theme: Theme) =>
     calendarContainer: {
       minWidth: 370,
       minHeight: 450,
+      overflow: "hidden"
+    },
+    monthContainer: {
+      minHeight: 400,
       display: "flex",
       flexDirection: "column",
-      justifyContent: "space-between",
-      overflow: "hidden"
+      justifyContent: "space-between"
     },
     calendarDaysContainer: {
       margin: theme.spacing.unit
@@ -103,31 +106,34 @@ const Calendar: React.SFC<IProps> = ({
             {months[tabIndex % 12].long + ", " + Math.floor(tabIndex / 12)}
           </Button>
         </CalendarHeader>
-        <div className={classes.calendarDaysContainer}>
-          {monthIndexValid(tabIndex) ? (
-            <CalendarDays
-              active={active}
-              dateDisabled={dateDisabled}
-              selectDate={selectDate}
-              showYearsCalendar={showYearsCalendar}
-              tabIndex={tabIndex}
-            />
-          ) : (
-            <div key={tabIndex} />
-          )}
-        </div>
-        <div>
-          {okToConfirm && (
-            <CalendarActions
-              setToday={setToday}
-              closeCalendar={closeCalendar}
-              confirmDate={confirmDate}
-            />
-          )}
+        <div className={classes.monthContainer}>
+          <div className={classes.calendarDaysContainer}>
+            {monthIndexValid(tabIndex) ? (
+              <CalendarDays
+                active={active}
+                dateDisabled={dateDisabled}
+                selectDate={selectDate}
+                showYearsCalendar={showYearsCalendar}
+                tabIndex={tabIndex}
+                slideDirection="left"
+              />
+            ) : (
+              <div key={tabIndex} />
+            )}
+          </div>
+          <div>
+            {okToConfirm && (
+              <CalendarActions
+                setToday={setToday}
+                closeCalendar={closeCalendar}
+                confirmDate={confirmDate}
+              />
+            )}
+          </div>
         </div>
       </>
     ) : (
-      <div>
+      <>
         <CalendarHeader
           previousValid={previousYearsValid}
           nextValid={nextYearsValid}
@@ -147,12 +153,13 @@ const Calendar: React.SFC<IProps> = ({
               yearIndex={yearIndex}
               year={year}
               yearInvalid={yearInvalid}
+              slideDirection="right"
             />
           ) : (
             <div key={yearIndex} />
           )}
         </div>
-      </div>
+      </>
     )}
   </div>
 );
