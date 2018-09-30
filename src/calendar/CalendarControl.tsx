@@ -5,10 +5,10 @@ import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import ChevronRight from "@material-ui/icons/ChevronRight";
 
 export interface IProps extends WithStyles<typeof styles> {
-  previousYearsValid: () => boolean;
-  previousYears: () => void;
-  nextYearsValid: () => boolean;
-  nextYears: () => void;
+  previousValid: () => boolean;
+  nextValid: () => boolean;
+  previous: () => void;
+  next: () => void;
 }
 
 const styles = createStyles({
@@ -20,21 +20,21 @@ const styles = createStyles({
   }
 });
 
-const YearControl: React.SFC<IProps> = ({
+const CalendarControl: React.SFC<IProps> = ({
   classes,
-  previousYearsValid,
-  previousYears,
-  nextYearsValid,
-  nextYears
+  previousValid,
+  nextValid,
+  previous,
+  next
 }) => (
   <div className={classes.calendarControl}>
-    <IconButton disabled={!previousYearsValid()} onClick={previousYears}>
+    <IconButton disabled={!previousValid()} onClick={previous}>
       <ChevronLeft />
     </IconButton>
-    <IconButton disabled={!nextYearsValid()} onClick={nextYears}>
+    <IconButton disabled={!nextValid()} onClick={next}>
       <ChevronRight />
     </IconButton>
   </div>
 );
 
-export default withStyles(styles)(YearControl);
+export default withStyles(styles)(CalendarControl);

@@ -1,30 +1,10 @@
 import React from "react";
 import { render } from "react-dom";
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-  createStyles,
-  withStyles,
-  WithStyles
-} from "@material-ui/core/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
-// import DateFormatInput from "../src/datepicker";
-// import TimeFormatInput from "../src/timepicker";
-
-import Calendar from "../src/calendar/Calendar";
+import CalendarContainer from "../src/calendar/CalendarContainer";
 
 const theme = createMuiTheme();
-
-const styles = createStyles({
-  container: {
-    width: "100vw",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
 
 interface IState {
   date: Date;
@@ -33,8 +13,8 @@ interface IState {
   time?: Date;
 }
 
-class DemoPage extends React.Component<WithStyles<typeof styles>, IState> {
-  constructor(props: WithStyles<typeof styles>) {
+class DemoPage extends React.Component<{}, IState> {
+  constructor(props: {}) {
     super(props);
     const now = new Date();
     this.state = {
@@ -46,45 +26,19 @@ class DemoPage extends React.Component<WithStyles<typeof styles>, IState> {
   }
 
   public render() {
-    const { classes } = this.props;
-    const { date, min, max, time } = this.state;
+    const { date } = this.state;
     return (
-      <div className={classes.container}>
-        <div>
-          <Calendar
-            value={date}
-            onChange={this.onChangeDate}
-            closeCalendar={this.closeCalendar}
-          />
-          {/* <DateFormatInput
-          name="date-input"
-          value={date}
-          onChange={this.onChangeDate}
-          min={min}
-          max={max}
-          label="Date"
-          okToConfirm
-        />
-        <TimeFormatInput
-          name="time-input"
-          value={time}
-          onChange={this.onChangeTime}
-          label="Time"
-          selectableMinutesInterval={5}
-          dialog
-          okToConfirm
-        /> */}
-        </div>
-      </div>
+      <CalendarContainer
+        okToConfirm
+        value={date}
+        onChange={this.onChangeDate}
+        closeCalendar={this.closeCalendar}
+      />
     );
   }
 
   private onChangeDate = (date: Date) => {
     this.setState({ date });
-  };
-
-  private onChangeTime = (time: Date) => {
-    this.setState({ time });
   };
 
   private closeCalendar = () => {
@@ -93,11 +47,9 @@ class DemoPage extends React.Component<WithStyles<typeof styles>, IState> {
   };
 }
 
-const DemoStyledPage = withStyles(styles)(DemoPage);
-
 render(
   <MuiThemeProvider theme={theme}>
-    <DemoStyledPage />
+    <DemoPage />
   </MuiThemeProvider>,
   document.getElementById("root")
 );

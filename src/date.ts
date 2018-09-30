@@ -8,7 +8,7 @@ export const fillInDigit = (n: number, digit: number) => {
   return clean;
 };
 
-export const month = [
+export const months = [
   {
     short: "Jan",
     long: "January"
@@ -59,33 +59,33 @@ export const month = [
   }
 ];
 
-export const day = [
+export const days = [
   {
-    short: "Sun",
+    short: "Su",
     long: "Sunday"
   },
   {
-    short: "Mon",
+    short: "Mo",
     long: "Monday"
   },
   {
-    short: "Tue",
+    short: "Tu",
     long: "Tuesday"
   },
   {
-    short: "Wed",
+    short: "We",
     long: "Wednesday"
   },
   {
-    short: "Thu",
+    short: "Th",
     long: "Thursday"
   },
   {
-    short: "Fri",
+    short: "Fr",
     long: "Friday"
   },
   {
-    short: "Sat",
+    short: "Sa",
     long: "Saturday"
   }
 ];
@@ -153,11 +153,11 @@ export const formatDate = (date: Date, format: string) =>
     [
       {
         keyword: "MMMM",
-        word: month[date.getMonth()].long
+        word: months[date.getMonth()].long
       },
       {
         keyword: "MMM",
-        word: month[date.getMonth()].short
+        word: months[date.getMonth()].short
       },
       {
         keyword: "MM",
@@ -181,11 +181,11 @@ export const formatDate = (date: Date, format: string) =>
     [
       {
         keyword: "EEE",
-        word: day[date.getDay()].short
+        word: days[date.getDay()].short
       },
       {
         keyword: "EEEE",
-        word: day[date.getDay()].long
+        word: days[date.getDay()].long
       }
     ]
   ].reduce((dateString, formattings) => {
@@ -209,4 +209,58 @@ export const sameDay = (dateA?: Date, dateB?: Date) => {
   } else {
     return false;
   }
+};
+
+export const generateYearCalendar = (index: number) => {
+  const years: number[][] = [];
+  let counter = 0;
+  for (let year = index * 18; year < (index + 1) * 18; year++) {
+    if (!years[Math.floor(counter / 3)]) {
+      years[Math.floor(counter / 3)] = [year];
+    } else {
+      years[Math.floor(counter / 3)] = [
+        ...years[Math.floor(counter / 3)],
+        year
+      ];
+    }
+    counter++;
+  }
+  return years;
+};
+
+export const generateMonthCalendar = (index: number) => {
+  const calendarFocus = {
+    year: Math.floor(index / 12),
+    month: index % 12
+  };
+  const firstDay = new Date(calendarFocus.year, calendarFocus.month, 1);
+  const daysInWeekInMonth: Array<Array<Date | undefined>> = [
+    Array(firstDay.getDay()).fill(undefined)
+  ];
+  let counter = firstDay.getDay();
+  for (
+    let day = firstDay;
+    day.getMonth() === calendarFocus.month;
+    day = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1)
+  ) {
+    if (!daysInWeekInMonth[Math.floor(counter / 7)]) {
+      daysInWeekInMonth[Math.floor(counter / 7)] = [
+        new Date(day.getFullYear(), day.getMonth(), day.getDate())
+      ];
+    } else {
+      daysInWeekInMonth[Math.floor(counter / 7)] = [
+        ...daysInWeekInMonth[Math.floor(counter / 7)],
+        new Date(day.getFullYear(), day.getMonth(), day.getDate())
+      ];
+    }
+    counter++;
+  }
+  for (
+    let day = 6;
+    !daysInWeekInMonth[daysInWeekInMonth.length - 1][day];
+    day--
+  ) {
+    daysInWeekInMonth[daysInWeekInMonth.length - 1][day] = undefined;
+  }
+  return daysInWeekInMonth;
 };
